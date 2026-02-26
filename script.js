@@ -1,49 +1,51 @@
 // ============================================
-// Matrix Rain Effect
+// Animated Background with Particles
 // ============================================
-function initMatrixEffect() {
-    const canvas = document.getElementById('matrix');
-    if (!canvas) return;
+function initAnimatedBackground() {
+    const bg = document.getElementById('animated-bg');
+    if (!bg) return;
 
-    const ctx = canvas.getContext('2d');
+    // Create floating particles
+    const particleCount = 50;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        
+        const randomX = Math.random() * window.innerWidth;
+        const randomDelay = Math.random() * 20;
+        const randomDuration = 20 + Math.random() * 15;
+        
+        particle.style.left = randomX + 'px';
+        particle.style.top = window.innerHeight + 'px';
+        particle.style.animationDelay = randomDelay + 's';
+        particle.style.animationDuration = randomDuration + 's';
+        
+        bg.appendChild(particle);
+    }
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const characters = '01אבגדהוזחטיכלמנסעפצקרשת';
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-    const drops = Array(Math.floor(columns)).fill(0);
-
-    function draw() {
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = '#00ff00';
-        ctx.font = fontSize + 'px Roboto Mono';
-
-        for (let i = 0; i < drops.length; i++) {
-            const text = characters.charAt(Math.floor(Math.random() * characters.length));
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
-            }
-            drops[i]++;
+    // Recreate particles when they leave the viewport
+    setInterval(() => {
+        const particles = document.querySelectorAll('.particle');
+        if (particles.length < particleCount) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            
+            const randomX = Math.random() * window.innerWidth;
+            const randomDelay = 0;
+            const randomDuration = 20 + Math.random() * 15;
+            
+            particle.style.left = randomX + 'px';
+            particle.style.top = window.innerHeight + 'px';
+            particle.style.animationDelay = randomDelay + 's';
+            particle.style.animationDuration = randomDuration + 's';
+            
+            bg.appendChild(particle);
         }
-    }
-
-    function animate() {
-        draw();
-        requestAnimationFrame(animate);
-    }
-
-    animate();
+    }, 5000);
 
     // Handle window resize
     window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
+        // Particles will be repositioned automatically
     });
 }
 
@@ -207,8 +209,8 @@ function initKeyboardShortcuts(skillTracker) {
 // Initialize everything
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize matrix effect
-    initMatrixEffect();
+    // Initialize animated background
+    initAnimatedBackground();
 
     // Initialize skill tracking
     const skillTracker = new SkillTracker();
